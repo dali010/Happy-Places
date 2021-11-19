@@ -38,7 +38,7 @@ dependencies {
 
     // Adding an google material design dependency for using material components
     implementation 'com.google.android.material:material:1.0.0'
-
+    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

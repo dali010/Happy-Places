@@ -1,8 +1,12 @@
-package com.happyplaces
+package com.happyplaces.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.happyplaces.R
+import com.happyplaces.database.DatabaseHandler
+import com.happyplaces.models.HappyPlaceModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -25,5 +29,21 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         // END
+
+        getHappyPlacesListFromLocalDB()
     }
+
+    private fun getHappyPlacesListFromLocalDB(){
+        val dbHandler = DatabaseHandler(this)
+        val getHappyPlaceList : ArrayList<HappyPlaceModel> = dbHandler.getHappyPlacesList()
+
+        if (getHappyPlaceList.size > 0){
+            for (i in getHappyPlaceList){
+                Log.e("Title",i.title)
+                Log.e("Description",i.description)
+            }
+        }
+    }
+
+
 }
