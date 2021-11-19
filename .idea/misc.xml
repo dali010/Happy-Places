@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/TakiAcademy/Desktop/HappyPlaces/HappyPlaces/app/src/main/res/layout/activity_add_happy_place.xml" value="0.18819655521783182" />
+        <entry key="..\:/Users/TakiAcademy/Desktop/HappyPlaces/HappyPlaces/app/src/main/res/layout/activity_main.xml" value="0.18819655521783182" />
+        <entry key="..\:/Users/TakiAcademy/Desktop/HappyPlaces_v2/HappyPlaces_v2/app/src/main/res/layout/activity_add_happy_place.xml" value="0.1" />
+        <entry key="..\:/Users/TakiAcademy/Desktop/HappyPlaces_v2/HappyPlaces_v2/app/src/main/res/layout/activity_main.xml" value="0.18819655521783182" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
