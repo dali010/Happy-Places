@@ -39,7 +39,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
     private  var mLatitude: Double =0.0
     private  var mLongitude: Double =0.0
 
-
+    private var mHappyPlaceDetails : HappyPlaceModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //This call the parent constructor
@@ -55,6 +55,11 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
             onBackPressed()
         }
 
+        if (intent.hasExtra(MainActivity.EXTRA_PLACE_DETAILS)){
+            mHappyPlaceDetails = intent.getParcelableExtra(
+                MainActivity.EXTRA_PLACE_DETAILS) as HappyPlaceModel
+        }
+
         // https://www.tutorialkart.com/kotlin-android/android-datepicker-kotlin-example/
         // create an OnDateSetListener
         dateSetListener =
@@ -65,6 +70,24 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                 updateDateInView()
             }
         updateDateInView()
+
+        if (mHappyPlaceDetails != null){
+            supportActionBar?.title = "Edit Happy Place"
+
+            et_title.setText(mHappyPlaceDetails!!.title)
+            et_description.setText(mHappyPlaceDetails!!.description)
+            et_date.setText(mHappyPlaceDetails!!.date)
+            et_location.setText(mHappyPlaceDetails!!.location)
+            mLatitude = mHappyPlaceDetails!!.latitude
+            mLongitude = mHappyPlaceDetails!!.longitude
+
+            saveImageToInternalStorage = Uri.parse(mHappyPlaceDetails!!.image)
+
+            iv_place_image.setImageURI(saveImageToInternalStorage)
+
+            btn_save.text = "UPDATE"
+        }
+
         et_date.setOnClickListener(this)
         // TODO(Step 1: Adding an onclick listener to tv_add_image)
         // START
