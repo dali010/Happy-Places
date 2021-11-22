@@ -36,6 +36,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
+    //third party library
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
+
     // Adding an google material design dependency for using material components
     implementation 'com.google.android.material:material:1.0.0'
     debugImplementation 'im.dino:dbinspector:3.4.1@aar'
