@@ -72,11 +72,6 @@
                     android:textSize="@dimen/edit_text_text_size"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--TODO(Step 1 : Making an Date edit text selectable instead of editable.)-->
-            <!--START-->
-            <!--1. Here we have added the two property as 'android:focusable="false"
-                    android:focusableInTouchMode="false" ' to make the edit text selectable
-                     not editable and the date selection code be done programmatically later on.-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_date"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -99,7 +94,6 @@
                     android:textColorHint="@color/secondary_text_color"
                     android:textSize="@dimen/edit_text_text_size" />
             </com.google.android.material.textfield.TextInputLayout>
-            <!--END-->
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_location"
@@ -115,6 +109,8 @@
                     android:id="@+id/et_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:hint="@string/edit_text_hint_location"
                     android:inputType="text"
                     android:textColor="@color/primary_text_color"

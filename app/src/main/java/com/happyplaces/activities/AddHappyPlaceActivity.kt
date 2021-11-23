@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.*
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -12,8 +13,12 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
 import com.happyplaces.R
 import com.happyplaces.database.DatabaseHandler
 import com.happyplaces.models.HappyPlaceModel
@@ -22,11 +27,16 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.mapbox.geojson.Point
+import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 import kotlinx.android.synthetic.main.activity_add_happy_place.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -41,9 +51,14 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
 
     private var mHappyPlaceDetails : HappyPlaceModel? = null
 
+    private var latitude : Double? = null
+    private var longitude : Double? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //This call the parent constructor
         super.onCreate(savedInstanceState)
+        Mapbox.getInstance(this, getString(R.string.mapbox_access_token))
+
 
         // This is used to align the xml view to this class
         setContentView(R.layout.activity_add_happy_place)
@@ -55,9 +70,14 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
             onBackPressed()
         }
 
+        if(!Places.isInitialized()){
+            Places.initialize(this@AddHappyPlaceActivity,
+                resources.getString(R.string.google_maps_api_key))
+        }
+
         if (intent.hasExtra(MainActivity.EXTRA_PLACE_DETAILS)){
             mHappyPlaceDetails = intent.getParcelableExtra(
-                MainActivity.EXTRA_PLACE_DETAILS) as HappyPlaceModel
+                MainActivity.EXTRA_PLACE_DETAILS) as HappyPlaceModel?
         }
 
         // https://www.tutorialkart.com/kotlin-android/android-datepicker-kotlin-example/
@@ -95,6 +115,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
         // END
 
         btn_save.setOnClickListener (this)
+        et_location.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -109,6 +130,8 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                     cal.get(Calendar.DAY_OF_MONTH)
                 ).show()
             }
+
+
 
             // TODO(Step 2 : Adding an alert dialog for selection of image.)
             // START
@@ -159,8 +182,8 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                             et_description.text.toString(),
                             et_date.text.toString(),
                             et_location.text.toString(),
-                            mLatitude,
-                            mLongitude
+                            latitude!!,
+                            longitude!!
                         )
                     val dbHandler = DatabaseHandler(this)
                     if (mHappyPlaceDetails == null){
@@ -180,6 +203,41 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             }
+
+            R.id.et_location -> {
+                try{
+                    val intent = PlaceAutocomplete.IntentBuilder()
+                        .accessToken(
+                            (if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken() else getString(
+                                R.string.mapbox_access_token
+                            ))!!
+                        )
+                        .placeOptions(
+                            PlaceOptions.builder()
+                                .backgroundColor(Color.parseColor("#EEEEEE"))
+                                .limit(10) //.addInjectedFeature(home)
+                                //.addInjectedFeature(work)
+                                .build(PlaceOptions.MODE_CARDS)
+                        )
+                        .build(this@AddHappyPlaceActivity)
+                    resultLauncher.launch(intent)
+
+                }catch (e: Exception){
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    private var resultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            val data: Intent? = result.data
+            val selectedCarmenFeature = PlaceAutocomplete.getPlace(data)
+            et_location.setText(selectedCarmenFeature.placeName().toString())
+            latitude = (selectedCarmenFeature.geometry() as Point?)!!.latitude()
+            longitude = (selectedCarmenFeature.geometry() as Point?)!!.longitude()
         }
     }
 
@@ -200,6 +258,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                 if (data != null){
                     val contentUri = data.data
                     try {
+                        @Suppress("DEPRECATION")
                         val selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentUri)
                         saveImageToInternalStorage = saveImageToInternalStorage(selectedImageBitmap)
 
@@ -221,9 +280,17 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
 
 
                 iv_place_image.setImageBitmap(thumbNail)
+            }else if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE){
+                val place : Place = Autocomplete.getPlaceFromIntent(data!!)
+                et_location.setText(place.address)
+                mLatitude = place.latLng!!.latitude
+                mLongitude = place.latLng!!.longitude
             }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            Log.e("Cancelled", "Cancelled")
         }
-    }
+        }
+
 
     private fun takePhotoFromCamera(){
         Dexter.withActivity(this)
@@ -337,5 +404,6 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
         private const val GALLERY = 1
         private const val CAMERA = 2
         private const val IMAGE_DIRECTORY = "HappyPlacesImages"
+        private const val PLACE_AUTOCOMPLETE_REQUEST_CODE = 3
     }
 }

@@ -1,2 +1,27 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        jcenter() // Warning: this repository is going to shut down soon
+        maven { url 'https://mapbox.bintray.com/mapbox' }
+
+
+        maven {
+            url 'https://api.mapbox.com/downloads/v2/releases/maven'
+            authentication {
+                basic(BasicAuthentication)
+            }
+
+            credentials {
+                // Do not change the username below.
+                // This should always be `mapbox` (not your username).
+                username = 'mapbox'
+                // Use the secret token you stored in gradle.properties as the password
+                password = 'sk.eyJ1IjoiYm91eWFoeWFhIiwiYSI6ImNrdzR0czZ0MjBhMG0ybm52Y3RzY2E1a2kifQ.O7Vsgr0BlFt8RMhbo9m_Rg' ?: ''
+            }
+        }
+    }
+}
+rootProject.name = "HappyPlaces"
 include ':app'
-rootProject.name = "Happy Places"

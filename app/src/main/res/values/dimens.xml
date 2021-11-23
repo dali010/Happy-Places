@@ -38,6 +38,11 @@
     <dimen name="detail_screen_location_marginTop">16dp</dimen>
     <dimen name="detail_screen_location_text_size">18sp</dimen>
 
+    <dimen name="detail_screen_btn_view_on_map_marginStartEnd">8dp</dimen>
+    <dimen name="detail_screen_btn_view_on_map_marginTop">16dp</dimen>
+    <dimen name="detail_screen_btn_view_on_map_PaddingTopBottom">8dp</dimen>
+    <dimen name="detail_screen_btn_view_on_map_text_size">18sp</dimen>
+
 
 
 </resources>

@@ -14,4 +14,10 @@
 
     <string name="note_text_no_happy_places_found_yet_kindly_add_one">No Happy Places Found Yet. Kindly add one.</string>
     <string name="image_content_description">image</string>
+
+    <string name="btn_text_view_on_map">VIEW ON MAP</string>
+
+
+    <string name="google_maps_api_key">AIzaSyAq4KuUVVfdmusIJXfBqVoqvfNnN2UwSEU</string>
+    <string name="mapbox_access_token">sk.eyJ1IjoiZGFsaTAxIiwiYSI6ImNrd2J1MTdtMTBlMm8yb24ybXR6c2x1bzYifQ.BSeIK9Rag4c_u5PsTCfxcg</string>
 </resources>
