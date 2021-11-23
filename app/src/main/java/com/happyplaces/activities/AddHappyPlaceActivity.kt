@@ -174,7 +174,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                         if (updateHappyPlaceResult >0) {
                             setResult(Activity.RESULT_OK)
                             finish()
-                            
+
                         }
                     }
                     }
